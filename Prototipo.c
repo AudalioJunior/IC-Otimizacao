@@ -6,14 +6,32 @@
 
 
 typedef struct t{
+	int id;
 	int custo;
 	int pred[2];
 }tarefa;
+
+typedef struct s{
+	int custo;
+	int pred [2];
+	int tf;
+}
+
+void alimentar(*solution){
+	i = 0
+	while (i <= 10)
+	{
+		solution[i] = -1;
+		i++;
+	}
+	
+}
 
 //Programa
 int main(void){
 	tarefa proj[MAX];
 	int op = 4;
+
 	
 	while(op != 0){
 	printf("------------Menu de operacoes------------ \n");
