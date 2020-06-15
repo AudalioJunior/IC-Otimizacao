@@ -16,27 +16,64 @@ typedef struct t
 typedef struct s
 {
 	int id;
-	int custo;
 	int pred[2];
 	int tl;
-} solucao;
+} Solucao;
+
+//Menor custo
+int menor(int custo1, int custo2){
+	if(custo1 > custo2){
+		return custo1;
+	}else{
+		return custo2;
+	}
+}
+
 
 //Cadidatos e solução
 void gerar(tarefa *proj){
-	
+	int i;
+	int aux1, k, m, n;
 	tarefa candidatos[MAX];
-	int aux = 0;
-			while (aux != MAX)
-			{
-				if(proj[aux].pred[0] == -1){
-					candidatos[aux].id = proj[aux].id;
-					candidatos[aux].pred[0] = proj[aux].pred[0];
-					candidatos[aux].pred[1] = proj[aux].pred[1];
-					candidatos[aux].pred[2] = proj[aux].pred[2];
-					printf("%d", candidatos[aux].id);
-				}
-				aux++;
-			}
+	Solucao solucao[MAX];
+	
+	//Incializar tarefas
+	
+	k = 0; 
+	while (k < MAX)
+	{
+		candidatos[k].id = -1;
+		solucao[k].id = -1;
+		k++;
+	}
+	//Loop da resolução
+	//Primeiro caso
+	//Verificar aqueles que possuem -1 como predecessor
+
+	i = 0;
+	while (i <= MAX)
+	{
+		if (proj[i].pred[0] == -1)
+		{
+			candidatos[i].id = proj[i].id;
+			candidatos[i].pred[0] = proj[i].pred[0];
+			candidatos[i].pred[1] = proj[i].pred[1];
+			candidatos[i].pred[2] = proj[i].pred[2];
+			candidatos[i].custo = proj[i].custo;
+			
+			printf("%d ", candidatos[i].id);
+		}else{
+			
+		}
+		
+		i++;
+		
+	}
+	
+	
+	
+	
+	
 }
 
 //Programa
@@ -47,7 +84,7 @@ int main(void)
 
 	while (op != 0)
 	{
-		printf("------------Menu de operacoes------------ \n");
+		printf("\n------------Menu de operacoes------------\n");
 		printf("1 Inserir proj \n");
 		printf("2 Testar \n");
 		printf("3 Gerar arquivo \n");
@@ -102,7 +139,7 @@ int main(void)
 			proj[7].id = 7;
 			proj[7].pred[0] = 2;
 			proj[7].pred[1] = -1;
-			proj[7].pred[2] = 0;
+			proj[7].pred[2] = -1;
 			proj[7].custo = 4;
 
 			proj[8].id = 8;
