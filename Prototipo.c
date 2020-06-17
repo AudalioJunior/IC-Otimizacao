@@ -10,14 +10,15 @@ typedef struct t
 	int id;
 	int custo;
 	int pred[2];
+	int add;
 } tarefa;
 
 //Estrutura da solução
 typedef struct s
 {
 	int id;
-	int pred[2];
-	int tl;
+	int inicio;
+	int fim;
 } Solucao;
 
 //Menor custo
@@ -33,7 +34,7 @@ int menor(int custo1, int custo2){
 //Cadidatos e solução
 void gerar(tarefa *proj){
 	int i;
-	int aux1, k, m, n;
+	int k, m, n;
 	tarefa candidatos[MAX];
 	Solucao solucao[MAX];
 	
@@ -46,14 +47,17 @@ void gerar(tarefa *proj){
 		solucao[k].id = -1;
 		k++;
 	}
-	//Loop da resolução
-	//Primeiro caso
-	//Verificar aqueles que possuem -1 como predecessor
 
+	// posicao 0
 	i = 0;
+	candidatos[0].id = proj[0].id;
+	solucao[0].id = candidatos[0].id;
+
+	//Loop da resolução
 	while (i <= MAX)
 	{
-		if (proj[i].pred[0] == -1)
+		//candidatos vazio		
+		if (proj[i].pred[0] == 0)
 		{
 			candidatos[i].id = proj[i].id;
 			candidatos[i].pred[0] = proj[i].pred[0];
@@ -61,16 +65,39 @@ void gerar(tarefa *proj){
 			candidatos[i].pred[2] = proj[i].pred[2];
 			candidatos[i].custo = proj[i].custo;
 			
-			printf("%d ", candidatos[i].id);
 		}else{
 			
+			// solução vazia
+			k = 1;
+			if (solucao[k].id == -1)
+			{
+				m = 1;
+				n = 1;
+				while (candidatos[k].id != -1)
+				{
+					if (candidatos[k].custo <= candidatos[m].custo){
+						m = candidatos[k].id;
+						k++;
+					}else{
+						k++;
+					}
+				}
+			solucao[1].id = candidatos[m].id;
+			solucao[1].inicio = 0;
+			solucao[1].fim = candidatos[m].custo;
+
+			}else{
+
+			}
+			
+
 		}
 		
 		i++;
 		
 	}
 	
-	
+	printf("%d, %d", solucao[0].id, solucao[1].id);
 	
 	
 	
@@ -101,19 +128,19 @@ int main(void)
 			proj[0].custo = -1;
 
 			proj[1].id = 1;
-			proj[1].pred[0] = -1;
+			proj[1].pred[0] = 0;
 			proj[1].pred[1] = -1;
 			proj[1].pred[2] = -1;
 			proj[1].custo = 4;
 
 			proj[2].id = 2;
-			proj[2].pred[0] = -1;
+			proj[2].pred[0] = 0;
 			proj[2].pred[1] = -1;
 			proj[2].pred[2] = -1;
 			proj[2].custo = 10;
 
 			proj[3].id = 3;
-			proj[3].pred[0] = -1;
+			proj[3].pred[0] = 0;
 			proj[3].pred[1] = -1;
 			proj[3].pred[2] = -1;
 			proj[3].custo = 5;
