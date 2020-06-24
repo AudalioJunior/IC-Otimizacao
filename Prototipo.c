@@ -1,6 +1,5 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include <conio.h>
 
 #define MAX 10
 
@@ -22,25 +21,29 @@ typedef struct s
 } Solucao;
 
 //Menor custo
-int menor(int custo1, int custo2){
-	if(custo1 > custo2){
+int menor(int custo1, int custo2)
+{
+	if (custo1 > custo2)
+	{
 		return custo1;
-	}else{
+	}
+	else
+	{
 		return custo2;
 	}
 }
 
-
 //Cadidatos e solução
-void gerar(tarefa *proj){
+void gerar(tarefa *proj)
+{
 	int i;
-	int k, m, n;
+	int k, m, n, l, j;
 	tarefa candidatos[MAX];
 	Solucao solucao[MAX];
-	
+
 	//Incializar tarefas
-	
-	k = 0; 
+
+	k = 0;
 	while (k < MAX)
 	{
 		candidatos[k].id = -1;
@@ -50,13 +53,12 @@ void gerar(tarefa *proj){
 
 	// posicao 0
 	i = 0;
-	candidatos[0].id = proj[0].id;
-	solucao[0].id = candidatos[0].id;
+	candidatos[0].id = 0;
+	candidatos[0].add = 0;
 
-	//Loop da resolução
+	//Candidatos nulos
 	while (i <= MAX)
 	{
-		//candidatos vazio		
 		if (proj[i].pred[0] == 0)
 		{
 			candidatos[i].id = proj[i].id;
@@ -64,42 +66,97 @@ void gerar(tarefa *proj){
 			candidatos[i].pred[1] = proj[i].pred[1];
 			candidatos[i].pred[2] = proj[i].pred[2];
 			candidatos[i].custo = proj[i].custo;
-			
-		}else{
-			
-			// solução vazia
-			k = 1;
-			if (solucao[k].id == -1)
+			candidatos[i].add = 0;
+			i++;
+		}
+		else
+		{
+			i++;
+		}
+	}
+
+	//Resolução dos candidatos
+	i = 0;
+	n = 0;
+	while (i <= MAX)
+	{
+		//Verifica se está na lista
+		if (candidatos[i].id != -1)
+		{
+			//Verifica se é nulo (O caso só ocorrerá uma vez)
+			if (candidatos[i].add == 0)
 			{
-				m = 1;
-				n = 1;
-				while (candidatos[k].id != -1)
+				if (candidatos[i].id == 0)
 				{
-					if (candidatos[k].custo <= candidatos[m].custo){
-						m = candidatos[k].id;
-						k++;
-					}else{
-						k++;
+					solucao[i].id = 0;
+					solucao[i].inicio = 0;
+					solucao[i].fim = 0;
+					candidatos[i].add = 1;
+					i++;
+				}
+				else
+				{
+					//Garante que meu [n], será uma pos de comparação
+					while (candidatos[n].add != 0)
+					{
+						n++;
+					}
+
+					//Verifica quem possui o menor custo
+					if (candidatos[i].custo < candidatos[n].custo)
+					{
+						n = candidatos[i].id;
+						i++;
+					}
+					else
+					{
+						i++;
 					}
 				}
-			solucao[1].id = candidatos[m].id;
-			solucao[1].inicio = 0;
-			solucao[1].fim = candidatos[m].custo;
-
-			}else{
-
 			}
-			
-
+			else
+			{
+				i++;
+			}
 		}
+		else
+		{
+			// Não permite repições na minha solução
+			if (candidatos[n].add == 0)
+			{
+
+				// Deixa sempre na ultima posicao
+				k = 0;
+				while (solucao[k].id != -1)
+				{
+					k++;
+				}
+
+				//Alimentando a solucao
+				solucao[k].id = candidatos[n].id;
+				solucao[k].inicio = solucao[k - 1].fim;
+				solucao[k].fim = solucao[k].inicio + candidatos[n].custo;
+				candidatos[n].add = 1;
+
+				//Atualização os candidatos
+					
 		
-		i++;
-		
+
+				i = 0;
+			}
+			else
+			{
+				i++;
+			}
+		}
 	}
-	
-	printf("%d, %d", solucao[0].id, solucao[1].id);
-	
-	
+
+	k = 0;
+	while (k <= MAX)
+	{
+		printf("%d ", solucao[k].id);
+		k++;
+	}
 	
 }
 
@@ -191,7 +248,6 @@ int main(void)
 		if (op == 2)
 		{
 			gerar(proj);
-
 		}
 	}
 }
