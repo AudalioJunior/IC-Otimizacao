@@ -10,6 +10,7 @@ typedef struct t
 	int custo;
 	int pred[2];
 	int add;
+	int verificar;
 } tarefa;
 
 //Estrutura da solução
@@ -37,7 +38,7 @@ int menor(int custo1, int custo2)
 void gerar(tarefa *proj)
 {
 	int i;
-	int k, m, n, l, j;
+	int k, m, n, l, j, dec;
 	tarefa candidatos[MAX];
 	Solucao solucao[MAX];
 
@@ -55,6 +56,28 @@ void gerar(tarefa *proj)
 	i = 0;
 	candidatos[0].id = 0;
 	candidatos[0].add = 0;
+
+	// preenchendo os verificados (auxilio na atualizacao dos candidatos)
+	j = 0;
+	k = 0;
+	while (j <= MAX)
+	{
+		if (proj[j].pred[k] == -1])
+		{
+			proj[j].verificar = 0;
+		}else
+		{
+			k = 0;
+			while (proj[j].pred[k] != -1)
+			{
+				proj[j].verificar++;
+				k++;
+			}
+			
+		}
+		j++;
+	}
+	
 
 	//Candidatos nulos
 	while (i <= MAX)
@@ -134,11 +157,54 @@ void gerar(tarefa *proj)
 
 				//Alimentando a solucao
 				solucao[k].id = candidatos[n].id;
-				solucao[k].inicio = solucao[k - 1].fim;
+				solucao[k].inicio = solucao[k - 1].fim; // resolver esse problema
 				solucao[k].fim = solucao[k].inicio + candidatos[n].custo;
 				candidatos[n].add = 1;
 
 				//Atualização os candidatos
+
+				m = 0;
+				// cadidatos disponiveis
+				while (candidatos[m].id != -1)
+				{
+					// verifica se já se encontra na solução
+					if (candidatos[m].add == 1)
+					{
+						l = 0;
+						// lista do projeto
+						while (l <= MAX)
+						{
+							if (candidatos[m].id == proj[l].id) // verifica a igualdade
+							{
+								l++;
+							}else
+							{
+								if (proj[l].id == candidatos[l].id) // Verifica se o elemento pertence a lista de candidatos
+								{
+									l++;
+								}else
+								{
+									// caso 1
+									if (proj[])
+									{
+										/* code */
+									}
+									
+									
+									
+
+								}
+								
+							}
+							
+							
+							
+						}
+						
+					}
+					
+				}
+				
 					
 		
 
