@@ -38,9 +38,12 @@ int menor(int custo1, int custo2)
 void gerar(tarefa *proj)
 {
 	int i;
-	int k, m, n, l, j, dec;
+	int j;
+	int k, m, n, l, dec, test;
 	tarefa candidatos[MAX];
 	Solucao solucao[MAX];
+
+	
 
 	//Incializar tarefas
 
@@ -59,19 +62,32 @@ void gerar(tarefa *proj)
 
 	// preenchendo os verificados (auxilio na atualizacao dos candidatos)
 	j = 0;
+	while (j <= MAX)
+	{
+		proj[j].verificar = 0;
+		j++;
+	}
+	
+	j = 0;
 	k = 0;
 	while (j <= MAX)
 	{
-		if (proj[j].pred[k] == -1])
+		k = 0;
+		if (proj[j].pred[k] == -1)
 		{
 			proj[j].verificar = 0;
 		}else
 		{
-			k = 0;
-			while (proj[j].pred[k] != -1)
+			while (k <= 2)
 			{
-				proj[j].verificar++;
-				k++;
+				if (proj[j].pred[k] != -1)
+				{
+					proj[j].verificar++;
+					k++;
+				}else
+				{
+					k++;
+				}
 			}
 			
 		}
@@ -103,6 +119,8 @@ void gerar(tarefa *proj)
 	n = 0;
 	while (i <= MAX)
 	{
+		
+		
 		//Verifica se está na lista
 		if (candidatos[i].id != -1)
 		{
@@ -119,17 +137,20 @@ void gerar(tarefa *proj)
 				}
 				else
 				{
+					
 					//Garante que meu [n], será uma pos de comparação
 					while (candidatos[n].add != 0)
 					{
 						n++;
 					}
-
+			
 					//Verifica quem possui o menor custo
-					if (candidatos[i].custo < candidatos[n].custo)
+					if (candidatos[i].custo <= candidatos[n].custo)
 					{
 						n = candidatos[i].id;
 						i++;
+						
+						
 					}
 					else
 					{
@@ -141,9 +162,11 @@ void gerar(tarefa *proj)
 			{
 				i++;
 			}
+
 		}
 		else
 		{
+			
 			// Não permite repições na minha solução
 			if (candidatos[n].add == 0)
 			{
@@ -161,53 +184,70 @@ void gerar(tarefa *proj)
 				solucao[k].fim = solucao[k].inicio + candidatos[n].custo;
 				candidatos[n].add = 1;
 
-				//Atualização os candidatos
+				////////Atualização os candidatos/////////
 
 				m = 0;
-				// cadidatos disponiveis
-				while (candidatos[m].id != -1)
-				{
-					// verifica se já se encontra na solução
-					if (candidatos[m].add == 1)
+				dec = 0;
+				while (m <= MAX)
+				{	
+					//Projeto já add na lista de candidatos
+					if (proj[m].id == candidatos[m].id)
 					{
-						l = 0;
-						// lista do projeto
-						while (l <= MAX)
+						m++;
+					}else
+					{
+						if (proj[m].verificar != 0)
 						{
-							if (candidatos[m].id == proj[l].id) // verifica a igualdade
+							
+							//Processo de decisão
+							j = 0;
+							
+							while (j <= 2)
 							{
-								l++;
-							}else
-							{
-								if (proj[l].id == candidatos[l].id) // Verifica se o elemento pertence a lista de candidatos
+								l = 0;
+								while (solucao[l].id != -1)
 								{
-									l++;
-								}else
-								{
-									// caso 1
-									if (proj[])
+									
+									if (proj[m].pred[j] == solucao[l].id)
 									{
-										/* code */
+										
+										dec++;
+										l++;
+									}else
+									{
+										l++;
 									}
-									
-									
-									
-
 								}
-								
+								j++;
 							}
 							
 							
+							//adicao a lista de candidatos
+							if (dec == proj[m].verificar)
+							{
 							
+								candidatos[m].id = proj[m].id;
+								candidatos[m].pred[0] = proj[m].pred[0];
+								candidatos[m].pred[1] = proj[m].pred[0];
+								candidatos[m].pred[2] = proj[m].pred[0];
+								candidatos[m].custo = proj[m].custo;
+								candidatos[m].add = 0;
+							}
+
+							
+							m++;
+							dec = 0;
+							
+						}else
+						{
+							m++;
 						}
-						
+												
 					}
-					
 				}
-				
 					
 		
-
+				// FIM
 				i = 0;
 			}
 			else
@@ -216,6 +256,7 @@ void gerar(tarefa *proj)
 			}
 		}
 	}
+	
 
 	k = 0;
 	while (k <= MAX)
