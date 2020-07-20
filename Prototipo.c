@@ -21,19 +21,6 @@ typedef struct s
 	int fim;
 } Solucao;
 
-//Menor custo
-int menor(int custo1, int custo2)
-{
-	if (custo1 > custo2)
-	{
-		return custo1;
-	}
-	else
-	{
-		return custo2;
-	}
-}
-
 //Cadidatos e solução
 void gerar(tarefa *proj)
 {
@@ -43,12 +30,12 @@ void gerar(tarefa *proj)
 	tarefa candidatos[MAX];
 	Solucao solucao[MAX];
 
-	
+	printf("Entrou?? \n");
 
 	//Incializar tarefas
 
 	k = 0;
-	while (k < MAX)
+	while (k <= MAX)
 	{
 		candidatos[k].id = -1;
 		solucao[k].id = -1;
@@ -67,7 +54,7 @@ void gerar(tarefa *proj)
 		proj[j].verificar = 0;
 		j++;
 	}
-	
+
 	j = 0;
 	k = 0;
 	while (j <= MAX)
@@ -76,7 +63,8 @@ void gerar(tarefa *proj)
 		if (proj[j].pred[k] == -1)
 		{
 			proj[j].verificar = 0;
-		}else
+		}
+		else
 		{
 			while (k <= 2)
 			{
@@ -84,18 +72,17 @@ void gerar(tarefa *proj)
 				{
 					proj[j].verificar++;
 					k++;
-				}else
+				}
+				else
 				{
 					k++;
 				}
 			}
-			
 		}
 		j++;
 	}
-	
 
-	//Candidatos nulos
+	////////////////Candidatos nulos////////////////////
 	while (i <= MAX)
 	{
 		if (proj[i].pred[0] == 0)
@@ -114,16 +101,21 @@ void gerar(tarefa *proj)
 		}
 	}
 
-	//Resolução dos candidatos
+	////////////////Resolução dos candidatos///////////////
 	i = 0;
-	n = 0;
+
 	while (i <= MAX)
 	{
-		
-		
-		//Verifica se está na lista
+		printf("Resolucao %d \n", i);
+
+		//Verifica se está na lista ok
 		if (candidatos[i].id != -1)
 		{
+			if (i == MAX)
+			{
+				printf("Ultima reso %d %d\n", candidatos[i].id, candidatos[i].add);
+			}
+
 			//Verifica se é nulo (O caso só ocorrerá uma vez)
 			if (candidatos[i].add == 0)
 			{
@@ -137,20 +129,26 @@ void gerar(tarefa *proj)
 				}
 				else
 				{
-					
+					n = 0;
 					//Garante que meu [n], será uma pos de comparação
 					while (candidatos[n].add != 0)
 					{
 						n++;
 					}
-			
+
+					printf("Seu n e %d\n", n);
+					printf("O candidato pra comparar e %d\n", candidatos[n].id);
+
 					//Verifica quem possui o menor custo
 					if (candidatos[i].custo <= candidatos[n].custo)
 					{
+						if (n == 9)
+						{
+							printf("Meu n e %d meu i %d \n", n, i);
+						}
+
 						n = candidatos[i].id;
 						i++;
-						
-						
 					}
 					else
 					{
@@ -163,10 +161,26 @@ void gerar(tarefa *proj)
 				i++;
 			}
 
+			//////QUEBRA DO COD (lOCAL DO ERRO)///////
+			if (i == MAX)
+			{
+				k = 0;
+				while (solucao[k].id != -1)
+				{
+					k++;
+				}
+				solucao[k].id = candidatos[n].id;
+				solucao[k].inicio = solucao[k - 1].fim; // resolver esse problema
+				solucao[k].fim = solucao[k].inicio + candidatos[n].custo;
+				candidatos[n].add = 1;
+			}
+			////////////////////////////////////////
 		}
 		else
 		{
-			
+
+			printf("O inserido da vez e %d \n", n);
+
 			// Não permite repições na minha solução
 			if (candidatos[n].add == 0)
 			{
@@ -189,64 +203,54 @@ void gerar(tarefa *proj)
 				m = 0;
 				dec = 0;
 				while (m <= MAX)
-				{	
+				{
 					//Projeto já add na lista de candidatos
 					if (proj[m].id == candidatos[m].id)
 					{
 						m++;
-					}else
+					}
+					else
 					{
-						if (proj[m].verificar != 0)
-						{
-							
-							//Processo de decisão
-							j = 0;
-							
-							while (j <= 2)
-							{
-								l = 0;
-								while (solucao[l].id != -1)
-								{
-									
-									if (proj[m].pred[j] == solucao[l].id)
-									{
-										
-										dec++;
-										l++;
-									}else
-									{
-										l++;
-									}
-								}
-								j++;
-							}
-							
-							
-							//adicao a lista de candidatos
-							if (dec == proj[m].verificar)
-							{
-							
-								candidatos[m].id = proj[m].id;
-								candidatos[m].pred[0] = proj[m].pred[0];
-								candidatos[m].pred[1] = proj[m].pred[0];
-								candidatos[m].pred[2] = proj[m].pred[0];
-								candidatos[m].custo = proj[m].custo;
-								candidatos[m].add = 0;
-							}
+						//Processo de decisão
+						j = 0;
 
-							
-							m++;
-							dec = 0;
-							
-						}else
+						while (j <= 2)
 						{
-							m++;
+							l = 0;
+							while (solucao[l].id != -1)
+							{
+								if (proj[m].pred[j] == solucao[l].id)
+								{
+
+									dec++;
+								}
+								l++;
+							}
+							j++;
 						}
-												
+
+						//adicao a lista de candidatos
+						if (solucao[k].id == 6)
+						{
+							printf("Aqui man %d %d %d\n", i, m, dec);
+						}
+
+						if (dec == proj[m].verificar)
+						{
+
+							candidatos[m].id = proj[m].id;
+							candidatos[m].pred[0] = proj[m].pred[0];
+							candidatos[m].pred[1] = proj[m].pred[0];
+							candidatos[m].pred[2] = proj[m].pred[0];
+							candidatos[m].custo = proj[m].custo;
+							candidatos[m].add = 0;
+						}
+
+						m++;
+						dec = 0;
 					}
 				}
-					
-		
+
 				// FIM
 				i = 0;
 			}
@@ -256,15 +260,14 @@ void gerar(tarefa *proj)
 			}
 		}
 	}
-	
 
+	//Impressao final
 	k = 0;
 	while (k <= MAX)
 	{
 		printf("%d ", solucao[k].id);
 		k++;
 	}
-	
 }
 
 //Programa
@@ -342,7 +345,7 @@ int main(void)
 			proj[9].id = 9;
 			proj[9].pred[0] = 4;
 			proj[9].pred[1] = 6;
-			proj[9].pred[2] = -1;
+			proj[9].pred[2] = 3;
 			proj[9].custo = 2;
 
 			proj[10].id = 10;
