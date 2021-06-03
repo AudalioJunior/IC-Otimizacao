@@ -6,6 +6,7 @@
 //Estrutura do problema
 typedef struct t
 {
+
 	int id;
 	int custo;
 	int pred[2];
@@ -26,11 +27,9 @@ void gerar(tarefa *proj)
 {
 	int i;
 	int j;
-	int k, m, n, l, dec, test;
+	int k, m, n, l, dec, test, auxs;
 	tarefa candidatos[MAX];
 	Solucao solucao[MAX];
-
-	printf("Entrou?? \n");
 
 	//Incializar tarefas
 
@@ -106,15 +105,10 @@ void gerar(tarefa *proj)
 
 	while (i <= MAX)
 	{
-		printf("Resolucao %d \n", i);
 
 		//Verifica se está na lista ok
 		if (candidatos[i].id != -1)
 		{
-			if (i == MAX)
-			{
-				printf("Ultima reso %d %d\n", candidatos[i].id, candidatos[i].add);
-			}
 
 			//Verifica se é nulo (O caso só ocorrerá uma vez)
 			if (candidatos[i].add == 0)
@@ -136,16 +130,9 @@ void gerar(tarefa *proj)
 						n++;
 					}
 
-					printf("Seu n e %d\n", n);
-					printf("O candidato pra comparar e %d\n", candidatos[n].id);
-
 					//Verifica quem possui o menor custo
 					if (candidatos[i].custo <= candidatos[n].custo)
 					{
-						if (n == 9)
-						{
-							printf("Meu n e %d meu i %d \n", n, i);
-						}
 
 						n = candidatos[i].id;
 						i++;
@@ -169,17 +156,19 @@ void gerar(tarefa *proj)
 				{
 					k++;
 				}
+
 				solucao[k].id = candidatos[n].id;
-				solucao[k].inicio = solucao[k - 1].fim; // resolver esse problema
+				//Problema
+				solucao[k].inicio = solucao[k - 1].fim;
 				solucao[k].fim = solucao[k].inicio + candidatos[n].custo;
+				//Problema
+
 				candidatos[n].add = 1;
 			}
 			////////////////////////////////////////
 		}
 		else
 		{
-
-			printf("O inserido da vez e %d \n", n);
 
 			// Não permite repições na minha solução
 			if (candidatos[n].add == 0)
@@ -194,8 +183,29 @@ void gerar(tarefa *proj)
 
 				//Alimentando a solucao
 				solucao[k].id = candidatos[n].id;
-				solucao[k].inicio = solucao[k - 1].fim; // resolver esse problema
+				//Resultado inicio e fim
+				//Percorrer a solução em busca do pred
+
+				auxs = 0;
+				dec = 0;
+				while (solucao[auxs].id != -1)
+				{
+					m = 0;
+					while (m <= 2)
+					{
+						if (candidatos[n].pred[m] == solucao[auxs].id)
+						{
+							dec = auxs;
+						}
+						m++;
+					}
+					auxs++;
+				}
+
+				solucao[k].inicio = solucao[dec].fim;
 				solucao[k].fim = solucao[k].inicio + candidatos[n].custo;
+
+				//
 				candidatos[n].add = 1;
 
 				////////Atualização os candidatos/////////
@@ -230,10 +240,6 @@ void gerar(tarefa *proj)
 						}
 
 						//adicao a lista de candidatos
-						if (solucao[k].id == 6)
-						{
-							printf("Aqui man %d %d %d\n", i, m, dec);
-						}
 
 						if (dec == proj[m].verificar)
 						{
@@ -263,9 +269,10 @@ void gerar(tarefa *proj)
 
 	//Impressao final
 	k = 0;
-	while (k <= MAX)
+	while (k < MAX)
 	{
-		printf("%d ", solucao[k].id);
+		printf("%d (%d,%d) \n", solucao[k].id, solucao[k].inicio, solucao[k].fim);
+
 		k++;
 	}
 }
